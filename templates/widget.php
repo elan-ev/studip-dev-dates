@@ -134,47 +134,12 @@ $current_time = time();
 </article>
 
 <style>
-    #studip-dev-dates section {
-        margin-bottom: 20px;
-    }
-
-    #studip-dev-dates h2 {
-        font-size: 1.2em;
-        margin-bottom: 10px;
-        color: #28497c;
-    }
-
-    #studip-dev-dates table.default {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    #studip-dev-dates table.default th {
-        background-color: #e7ebf1;
-        padding: 8px;
-        text-align: left;
-        font-weight: bold;
-    }
-
-    #studip-dev-dates table.default td {
-        padding: 8px;
-        border-bottom: 1px solid #e7ebf1;
-    }
-
     #studip-dev-dates tr.next-event {
         background-color: #fffacd;
     }
 
-    #studip-dev-dates tr.next-event td {
-        border-bottom: 2px solid #ffd700;
-    }
-
     #studip-dev-dates tr.active-event {
         background-color: #d4edda;
-    }
-
-    #studip-dev-dates tr.active-event td {
-        border-bottom: 2px solid #28a745;
     }
 
     #studip-dev-dates tr.past-event {
@@ -182,15 +147,11 @@ $current_time = time();
         color: #666;
     }
 
-    #studip-dev-dates tr:hover {
-        background-color: #f5f5f5;
-    }
-
-    #studip-dev-dates tr.next-event:hover {
+    #studip-dev-dates tr.next-event:hover td {
         background-color: #fff9b3;
     }
 
-    #studip-dev-dates tr.active-event:hover {
+    #studip-dev-dates tr.active-event:hover td {
         background-color: #c3e6cb;
     }
 </style>
