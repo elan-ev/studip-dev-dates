@@ -1,0 +1,6 @@
+pluginname=StudipDevDates
+pluginclassname=StudipDevDates
+origin=elan-ev
+version=1.0
+studipMinVersion=6.0
+studipMaxVersion=6.2.99
