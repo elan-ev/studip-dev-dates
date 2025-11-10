@@ -35,7 +35,7 @@ $current_time = time();
 <article class="studip" id="studip-dev-dates">
     <?php if (empty($dates)): ?>
         <section>
-            <p><?= _('Keine Termine verfügbar. Bitte konfigurieren Sie die iCal-URL.') ?></p>
+            <p><?= _('Keine Termine verfügbar.'); ?></p>
         </section>
     <?php else: ?>
         <?php foreach ($dates as $version => $events): ?>
@@ -92,29 +92,41 @@ $current_time = time();
                                 } elseif ($is_past) {
                                     $row_class = 'past-event';
                                 }
+
+                                // Determine date display based on range type
+                                $date_display = '';
+                                if ($event['range_type'] === 'from') {
+                                    // "ab" case
+                                    $date_display = _('ab') . ' ' . htmlReady($event['date']);
+                                } elseif ($event['range_type'] === 'until') {
+                                    // "bis" case
+                                    $date_display = _('bis') . ' ' . htmlReady($event['end_date'] ?: $event['date']);
+                                } elseif ($event['range_type'] === 'range') {
+                                    // "von bis" case
+                                    if (!empty($event['end_date']) && $event['end_date'] !== $event['date']) {
+                                        $date_display = htmlReady($event['date']) . ' - ' . htmlReady($event['end_date']);
+                                    } else {
+                                        $date_display = htmlReady($event['date']);
+                                    }
+                                } else {
+                                    // Default case (no range indicator)
+                                    if (!empty($event['end_date']) && $event['end_date'] !== $event['date']) {
+                                        $date_display = htmlReady($event['date']) . ' - ' . htmlReady($event['end_date']);
+                                    } else {
+                                        $date_display = htmlReady($event['date']);
+                                    }
+                                }
                             ?>
                             <tr class="<?= $row_class ?>">
                                 <td>
                                     <?php if ($is_active): ?>
-                                        <?php if (!empty($event['end_date']) && $event['end_date'] !== $event['date']): ?>
-                                            <strong><?= htmlReady($event['date']) ?> - <?= htmlReady($event['end_date']) ?></strong>
-                                        <?php else: ?>
-                                            <strong><?= _('bis') ?> <?= htmlReady($event['end_date']) ?></strong>
-                                        <?php endif; ?>
+                                        <strong><?= $date_display ?></strong>
                                         <?= Icon::create('span-full', Icon::ROLE_STATUS_GREEN)->asImg(['title' => _('Aktuell aktiv')]) ?>
                                     <?php elseif ($is_next): ?>
-                                        <?php if (!empty($event['end_date']) && $event['end_date'] !== $event['date']): ?>
-                                            <strong><?= htmlReady($event['date']) ?> - <?= htmlReady($event['end_date']) ?></strong>
-                                        <?php else: ?>
-                                            <strong><?= _('bis') ?> <?= htmlReady($event['end_date']) ?></strong>
-                                        <?php endif; ?>
+                                        <strong><?= $date_display ?></strong>
                                         <?= Icon::create('date', Icon::ROLE_INFO)->asImg(['title' => _('Nächster Termin')]) ?>
                                     <?php else: ?>
-                                        <?php if (!empty($event['end_date']) && $event['end_date'] !== $event['date']): ?>
-                                            <?= htmlReady($event['date']) ?> - <?= htmlReady($event['end_date']) ?>
-                                        <?php else: ?>
-                                            <?= _('bis') ?> <?= htmlReady($event['end_date']) ?>
-                                        <?php endif; ?>
+                                        <?= $date_display ?>
                                     <?php endif; ?>
                                 </td>
                                 <td>

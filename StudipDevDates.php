@@ -141,7 +141,8 @@ class StudipDevDates extends StudIPPlugin implements PortalPlugin
                     'date'          => '',
                     'end_date'      => '',
                     'timestamp'     => 0,
-                    'end_timestamp' => 0
+                    'end_timestamp' => 0,
+                    'range_type'    => null  // 'from', 'until', 'range'
                 ];
             } elseif ($line === 'END:VEVENT' && $current_event !== null) {
                 if (!empty($current_event['title']) && !empty($current_event['date'])) {
@@ -157,7 +158,23 @@ class StudipDevDates extends StudIPPlugin implements PortalPlugin
                     $title = substr($line, 8);
                     // Unescape iCal special characters
                     $title = str_replace(['\\,', '\\;', '\\n', '\\N', '\\\\'], [',', ';', "\n", "\n", '\\'], $title);
-                    $current_event['title'] = $title;
+
+                    // Check for range indicators and extract them
+                    if (preg_match('/^(\d+\.\d+)\s*>\s*(.+)$/', $title, $matches)) {
+                        // "ab" case (from date onwards)
+                        $current_event['range_type'] = 'from';
+                        $current_event['title'] = $matches[1] . ' ' . trim($matches[2]);
+                    } elseif (preg_match('/^(\d+\.\d+)\s*<\s*(.+)$/', $title, $matches)) {
+                        // "bis" case (until date)
+                        $current_event['range_type'] = 'until';
+                        $current_event['title'] = $matches[1] . ' ' . trim($matches[2]);
+                    } elseif (preg_match('/^(\d+\.\d+)\s*-\s*(.+)$/', $title, $matches)) {
+                        // "von bis" case (date range)
+                        $current_event['range_type'] = 'range';
+                        $current_event['title'] = $matches[1] . ' ' . trim($matches[2]);
+                    } else {
+                        $current_event['title'] = $title;
+                    }
                 } elseif (strpos($line, 'DTSTART') === 0) {
                     // Handle both DTSTART:20240101 and DTSTART;VALUE=DATE:20240101
                     if (preg_match('/DTSTART[^:]*:(\d{8}(?:T\d{6}Z?)?)/', $line, $matches)) {
