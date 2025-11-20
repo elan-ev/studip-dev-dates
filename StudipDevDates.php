@@ -148,7 +148,13 @@ class StudipDevDates extends StudIPPlugin implements PortalPlugin
                 if (!empty($current_event['title']) && !empty($current_event['date'])) {
                     // If no end date is set, use start date as end date
                     if ($current_event['end_timestamp'] === 0) {
-                        $current_event['end_timestamp'] = $current_event['timestamp'];
+                        // For "from" type events, set end timestamp far in the future
+                        if ($current_event['range_type'] === 'from') {
+                            // Set to 10 years in the future so it stays active until a new event comes
+                            $current_event['end_timestamp'] = strtotime('+10 years', $current_event['timestamp']);
+                        } else {
+                            $current_event['end_timestamp'] = $current_event['timestamp'];
+                        }
                     }
                     $events[] = $current_event;
                 }
