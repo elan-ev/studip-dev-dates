@@ -94,7 +94,7 @@ class StudipDevDates extends StudIPPlugin implements PortalPlugin
             }
 
             // Sort versions in descending order
-            krsort($filtered_events, SORT_NATURAL);
+            ksort($filtered_events, SORT_NATURAL);
 
             return $filtered_events;
 
