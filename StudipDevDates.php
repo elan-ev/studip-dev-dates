@@ -169,15 +169,18 @@ class StudipDevDates extends StudIPPlugin implements PortalPlugin
                     if (preg_match('/^(\d+\.\d+)\s*>\s*(.+)$/', $title, $matches)) {
                         // "ab" case (from date onwards)
                         $current_event['range_type'] = 'from';
-                        $current_event['title'] = $matches[1] . ' ' . trim($matches[2]);
+                        $current_event['title'] = trim($matches[2]);
                     } elseif (preg_match('/^(\d+\.\d+)\s*<\s*(.+)$/', $title, $matches)) {
                         // "bis" case (until date)
                         $current_event['range_type'] = 'until';
-                        $current_event['title'] = $matches[1] . ' ' . trim($matches[2]);
+                        $current_event['title'] = trim($matches[2]);
                     } elseif (preg_match('/^(\d+\.\d+)\s*-\s*(.+)$/', $title, $matches)) {
                         // "von bis" case (date range)
                         $current_event['range_type'] = 'range';
-                        $current_event['title'] = $matches[1] . ' ' . trim($matches[2]);
+                        $current_event['title'] = trim($matches[2]);
+                    } elseif (preg_match('/^(\d+\.\d+)\s+(.+)$/', $title, $matches)) {
+                        // Default case with version number
+                        $current_event['title'] = trim($matches[2]);
                     } else {
                         $current_event['title'] = $title;
                     }
