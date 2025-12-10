@@ -64,6 +64,9 @@ class StudipDevDates extends StudIPPlugin implements PortalPlugin
                         $grouped_events[$version] = [];
                     }
 
+                    // Remove version number and range indicators from title
+                    $event['title'] = preg_replace('/^(\d+\.\d+)\s*[-<>]?\s*/', '', $event['title']);
+
                     $grouped_events[$version][] = $event;
                 }
             }
